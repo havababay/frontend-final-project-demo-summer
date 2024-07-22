@@ -1,1 +1,11 @@
-<p>team-view works!</p>,
+<ul>
+    <li *ngFor="let p of allPerson">
+        {{p.fullName()}}
+    </li>
+</ul>
+<div class="team-view-container">
+    <div *ngFor="let p of allPerson">
+        <app-person-card [currentPerson]="p"
+        [routerLink]="['/person',p.id]"></app-person-card>
+    </div>
+</div>
