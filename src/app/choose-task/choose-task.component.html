@@ -1,0 +1,25 @@
+<div>
+  <h1>Choose task</h1>
+  <div>
+    <mat-form-field>
+      <mat-select [(ngModel)]="selectTask">
+        <mat-option *ngFor="let task of allTasks" [value]="task">
+          {{ task.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div>
+    {{ selectTask?.description }}
+  </div>
+  <div>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="openDialog()"
+      [disabled]="!selectTask"
+    >
+      Choose team
+    </button>
+  </div>
+</div>
