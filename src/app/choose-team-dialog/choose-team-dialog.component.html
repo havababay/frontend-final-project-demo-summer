@@ -1,7 +1,16 @@
 <div>
   <div mat-dialog-title>Choose Team for task {{selectedTask.name}}</div>
-  <div mat-dialog-content>Placeholder</div>
+  <div mat-dialog-content>
+    <div>
+      Name: {{ randomTeam[personIndex].fullName() }}
+    </div>
+    <div>
+      <button mat-raised-button color="primary" (click)="nextPerson()">next</button>
+    </div>
+    <div>
+      <mat-progress-bar mode="determinate" [value]="personIndex / randomTeam.length * 100"></mat-progress-bar>
+    </div>
+  </div>
   <div mat-dialog-actions>
-    <button mat-raised-button color="primary" mat-dialog-close>OK</button>
   </div>
 </div>
