@@ -1,6 +1,12 @@
 import { PeronsService } from './../services/perons.service';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { FormsModule, NgModelGroup } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -15,29 +21,29 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'app-person-form',
   standalone: true,
   imports: [
-    CommonModule,       
+    CommonModule,
     FormsModule,
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
-    MatIconModule
+    MatIconModule,
   ],
   templateUrl: './person-form.component.html',
   styleUrl: './person-form.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PersonFormComponent implements OnInit { 
-  currentPerson: Person = new Person(0,'','','');
-  @ViewChild('phoneGroup') phoneGroup? : NgModelGroup;
+export class PersonFormComponent implements OnInit {
+  currentPerson: Person = new Person('', '', '', '');
+  @ViewChild('phoneGroup') phoneGroup?: NgModelGroup;
 
   @Input()
-  id? : string;
+  id?: string;
 
   constructor(private personService: PeronsService, private router: Router) {}
 
   ngOnInit(): void {
     if (this.id) {
-      let personFromService = this.personService.get(parseInt(this.id));
+      let personFromService = this.personService.get(this.id);
 
       if (personFromService) {
         this.currentPerson = personFromService;
@@ -46,21 +52,28 @@ export class PersonFormComponent implements OnInit {
   }
 
   onSubmitRegistration() {
-    console.log("Form submitted!");
+    console.log('Form submitted!');
     if (this.id) {
       this.personService.update(this.currentPerson);
     } else {
-      this.personService.add(this.currentPerson)
+      this.personService
+        .add(this.currentPerson)
+        .then(() => {
+          this.router.navigate(['']);
+        })
+        .catch(() => {
+          console.log('add error');
+        });
     }
     this.router.navigate(['']);
   }
 
   addPhoneNumber() {
-    this.currentPerson.phones.push(new PhoneNumber("", PhoneType.Mobile));
+    this.currentPerson.phones.push(new PhoneNumber('', PhoneType.Mobile));
   }
 
-  removePhoneNumber(index : number) {
+  removePhoneNumber(index: number) {
     this.currentPerson.phones.splice(index, 1);
     this.phoneGroup?.control.markAsDirty();
   }
- } 
+}

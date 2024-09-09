@@ -27,7 +27,7 @@ export class PersonsListComponent implements OnInit {
   allPersons : Person[] = [];
   displayedColumns = ['fullName', 'email', 'actions'];
 
-  deletePerson(id: number, fullName : string) {
+  deletePerson(id: string, fullName : string) {
     const dialogRef = this.dialogService.open(DeletePersonDialogComponent,{data: fullName,});
 
     dialogRef.afterClosed().subscribe(deletionResult => {
