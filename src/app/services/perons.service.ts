@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Person } from '../shared/model/person';
-import { addDoc, collection, Firestore } from '@angular/fire/firestore';
+import { addDoc, collection, DocumentSnapshot, Firestore, getDocs, QuerySnapshot } from '@angular/fire/firestore';
 import { personConverter } from './converter/person-converter';
 
 @Injectable({
@@ -9,8 +9,25 @@ import { personConverter } from './converter/person-converter';
 export class PeronsService {
   constructor(private firestore: Firestore) {}
 
-  list(): Person[] {
-    return [];
+  async list(): Promise<Person[]> {
+    const personCollection = collection(this.firestore, 'people').withConverter(
+      personConverter
+    );
+
+    const querySnapshot: QuerySnapshot<Person> = await getDocs(
+      personCollection
+    );
+
+    const result: Person[] = [];
+
+    querySnapshot.docs.forEach((docSnap: DocumentSnapshot<Person>) => {
+      const data = docSnap.data();
+      if (data) {
+        result.push(data);
+      }
+    });  
+
+    return result;
   }
 
   get(id: string): Person | undefined {
