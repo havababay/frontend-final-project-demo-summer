@@ -24,6 +24,10 @@ export class TeamViewComponent implements OnInit {
   constructor(private personService : PeronsService){}
   
   ngOnInit(): void {
-    this.allPerson = this.personService.list();
+    this.personService.list().then(
+      (result : Person[]) => {
+        this.allPerson = result;
+      }
+    );
   }
 }

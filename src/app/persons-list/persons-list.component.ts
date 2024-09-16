@@ -13,29 +13,44 @@ import { DeletePersonDialogComponent } from '../delete-person-dialog/delete-pers
   selector: 'app-persons-list',
   standalone: true,
   imports: [
-    CommonModule, MatTableModule, MatIconModule, MatButtonModule, RouterModule
+    CommonModule,
+    MatTableModule,
+    MatIconModule,
+    MatButtonModule,
+    RouterModule,
   ],
   templateUrl: './persons-list.component.html',
   styleUrl: './persons-list.component.css',
 })
-export class PersonsListComponent implements OnInit { 
-  constructor(private personService : PeronsService, private dialogService : MatDialog) {}
+export class PersonsListComponent implements OnInit {
+  isFullyLoaded = false;
+
+  constructor(
+    private personService: PeronsService,
+    private dialogService: MatDialog
+  ) {}
   ngOnInit(): void {
-    this.allPersons = this.personService.list();
+    this.personService.list().then((result: Person[]) => {
+      this.allPersons = result;
+      this.isFullyLoaded = true;
+    });
   }
 
-  allPersons : Person[] = [];
+  allPersons: Person[] = [];
   displayedColumns = ['fullName', 'email', 'actions'];
 
-  deletePerson(id: string, fullName : string) {
-    const dialogRef = this.dialogService.open(DeletePersonDialogComponent,{data: fullName,});
+  deletePerson(id: string, fullName: string) {
+    const dialogRef = this.dialogService.open(DeletePersonDialogComponent, {
+      data: fullName,
+    });
 
-    dialogRef.afterClosed().subscribe(deletionResult => {
-        if (deletionResult) {
-          this.personService.delete(id);
-          this.allPersons = this.personService.list();
-        }
+    dialogRef.afterClosed().subscribe((deletionResult) => {
+      if (deletionResult) {
+        this.personService.delete(id);
+        this.personService.list().then((result: Person[]) => {
+          this.allPersons = result;
+        });
       }
-    );
+    });
   }
 }
